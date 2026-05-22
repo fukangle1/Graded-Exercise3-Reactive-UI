@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghibli Park Itinerary Builder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="main-container" id="app">
+  <h1>Ghibli Park Itinerary Builder</h1>
+  <div class="accordion-custom">
+    <div class="accordion accordion-flush" id="itineraryAccordion">
+      <!-- here is the accordion first part: personal detail -->
+      <div class="accordion-item">
+        <h2 class="accordion-header acc-bg-1">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#personalCollapse">
+            Personal Details
+          </button>
+        </h2>
+        <div id="personalCollapse" class="accordion-collapse collapse" data-bs-parent="#itineraryAccordion">
+          <div class="accordion-body">
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" v-model="form.fullName" placeholder="Enter your full name">
+              <span v-if="errors.fullName" class="error-text">{{ errors.fullName }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" v-model="form.dob">
+              <span v-if="errors.dob" class="error-text">{{ errors.dob }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Gender</label>
+              <div class="radio-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" value="Male" v-model="form.gender" id="male">
+                  <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" value="Female" v-model="form.gender" id="female">
+                  <label class="form-check-label" for="female">Female</label>
+                </div>
+              </div>
+              <span v-if="errors.gender" class="error-text">{{ errors.gender }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- here is the accordion second part: about park select-->
+      <div class="accordion-item">
+        <h2 class="accordion-header acc-bg-2">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ghibliCollapse">
+            Ghibli Park Selection
+          </button>
+        </h2>
+        <div id="ghibliCollapse" class="accordion-collapse collapse" data-bs-parent="#itineraryAccordion">
+          <div class="accordion-body">
+            <div v-if="isLoadingPlaces" class="text-center py-4">Loading magical places...</div>
+            <div v-else-if="placesError" class="alert alert-danger">{{ placesError }}</div>
+            <div v-else>
+              <p class="text-muted fst-italic mb-3">Click a place to select it. Click it again to deselect it.</p>
+              <div class="places-grid">
+                <div v-for="place in places" :key="place.id" class="place-card" :class="{ selected: selectedPlaces.includes(place) }" @click="togglePlace(place)">
+                  <img :src="place.image" :alt="place.name" @error="e => e.target.src='https://via.placeholder.com/300?text=Image+Missing'">
+                  <div class="place-info">
+                    <div class="place-name">{{ place.name }}</div>
+                    <div class="place-desc">{{ place.description }}</div>
+                  </div>
+                </div>
+              </div>
+              <span v-if="errors.selectedPlaces" class="error-text d-block mt-3">{{ errors.selectedPlaces }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- here is the accordion 3 part: number of person-->
+      <div class="accordion-item">
+        <h2 class="accordion-header acc-bg-3">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#visitorsCollapse">
+            Visitors Details
+          </button>
+        </h2>
+        <div id="visitorsCollapse" class="accordion-collapse collapse" data-bs-parent="#itineraryAccordion">
+          <div class="accordion-body">
+            <div class="mb-3">
+              <label class="form-label">Total number of visitors</label>
+              <input type="number" class="form-control" v-model.number="form.totalVisitors" min="1">
+              <span v-if="errors.totalVisitors" class="error-text">{{ errors.totalVisitors }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Number of children</label>
+              <input type="number" class="form-control" v-model.number="form.childrenCount" min="0">
+              <span v-if="errors.childrenCount" class="error-text">{{ errors.childrenCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- here is the accordion 4 part:Accommodation -->
+      <div class="accordion-item">
+        <h2 class="accordion-header acc-bg-4">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accommodationCollapse">
+            Accommodation
+          </button>
+        </h2>
+        <div id="accommodationCollapse" class="accordion-collapse collapse" data-bs-parent="#itineraryAccordion">
+          <div class="accordion-body">
+            <label class="form-label">Select Accommodation</label>
+            <select class="form-select" v-model="form.accommodation">
+              <option value="" disabled>-- Choose accommodation --</option>
+              <option v-for="opt in accommodationOptions" :value="opt">{{ opt }}</option>
+            </select>
+            <span v-if="errors.accommodation" class="error-text">{{ errors.accommodation }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- here is the accordion 5 part: payment detail -->
+      <div class="accordion-item">
+        <h2 class="accordion-header acc-bg-5">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paymentCollapse">
+            Payment Details
+          </button>
+        </h2>
+        <div id="paymentCollapse" class="accordion-collapse collapse" data-bs-parent="#itineraryAccordion">
+          <div class="accordion-body">
+            <div class="mb-3">
+              <label class="form-label">Name on Card</label>
+              <input type="text" class="form-control" v-model="form.cardName" placeholder="Name on card">
+              <span v-if="errors.cardName" class="error-text">{{ errors.cardName }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Card Number</label>
+              <input type="text" class="form-control" v-model="form.cardNumber" placeholder="1234 5678 9012 3456">
+              <span v-if="errors.cardNumber" class="error-text">{{ errors.cardNumber }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Expiration Date</label>
+              <input type="month" class="form-control" v-model="form.expiry">
+              <span v-if="errors.expiry" class="error-text">{{ errors.expiry }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">CVC</label>
+              <input type="password" class="form-control" v-model="form.cvc" placeholder="123">
+              <span v-if="errors.cvc" class="error-text">{{ errors.cvc }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button class="btn btn-ghibli" @click="generateItinerary">Generate Itinerary</button>
+  </div>
+
+  <div v-if="generalError" class="global-error">
+    {{ generalError }}
+  </div>
+
+  <!-- the card after submit -->
+  <transition name="fade">
+    <div v-if="showSummary" class="summary-card">
+      <h2>Your Ghibli Park Itinerary</h2>
+      <div class="summary-section">
+        <div class="summary-title">Personal Details</div>
+        <div>Name: {{ form.fullName || '—' }}</div>
+        <div>Gender: {{ form.gender || '—' }}</div>
+        <div>Date of Birth: {{ form.dob || '—' }}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">Selected Park Places</div>
+        <div v-if="selectedPlaces.length === 0">—</div>
+        <div v-for="place in selectedPlaces" :key="place.id">- {{ place.name }}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">Visitors Details</div>
+        <div>Total Visitors: {{ form.totalVisitors || 0 }}</div>
+        <div>Children: {{ form.childrenCount || 0 }}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">Accommodation</div>
+        <div>Selected Option: {{ form.accommodation || 'Not selected' }}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">Payment Details</div>
+        <div>Name on Card: {{ form.cardName || '—' }}</div>
+        <div>Card Number: {{ maskCardNumber(form.cardNumber) }}</div>
+        <div>Expiration Date: {{ form.expiry || '—' }}</div>
+        <div>CVC: Provided</div>
+      </div>
+    </div>
+  </transition>
+  <footer>Let the magic begin</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

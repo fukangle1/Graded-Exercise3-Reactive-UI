@@ -1,0 +1,372 @@
+@font-face {
+  font-family: 'Luna';
+  src: url('assets/fonts/luna.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* background of outside */
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-image: url('assets/bg-totoro.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* width 80percent */
+.main-container {
+  width: 80%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* main title */
+h1 {
+  font-family: 'Luna', 'Fredoka One', cursive;
+  font-size: 3rem;
+  color: #b5ff7a;
+  text-align: center;
+  text-shadow: 3px 3px 0 #2c5a2a, 6px 6px 0 rgba(0,0,0,0.2);
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
+}
+
+/* cointeins of accordion */
+.accordion-custom {
+  background: rgba(210, 180, 140, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 32px;
+  padding: 1rem;
+  box-shadow: 0 20px 35px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,245,200,0.4);
+}
+
+/* accordion style */
+.accordion {
+  --bs-accordion-border-color: transparent;
+  border-radius: 24px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.accordion-item {
+  background: transparent;
+  border: none;
+  margin-bottom: 0;
+}
+
+/* button of accordion*/
+.accordion-button {
+  font-family: 'Luna', 'Quicksand', sans-serif;
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #d98c2b;
+  transition: all 0.2s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  position: relative;
+  z-index: 1;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  padding: 0.8rem 1.2rem;
+}
+
+.accordion-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #b5ff7a;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+/* pictures of accordion */
+.acc-bg-1 .accordion-button {
+  background-image: url('assets/acc-bg1.jpg');
+}
+.acc-bg-2 .accordion-button {
+  background-image: url('assets/acc-bg2.jpg');
+}
+.acc-bg-3 .accordion-button {
+  background-image: url('assets/acc-bg3.jpg');
+}
+.acc-bg-4 .accordion-button {
+  background-image: url('assets/acc-bg4.jpg');
+}
+.acc-bg-5 .accordion-button {
+  background-image: url('assets/acc-bg5.jpg');
+}
+
+/* orange inside background */
+.accordion-body {
+  background: #fce4c6;
+  border-radius: 0 0 20px 20px;
+  padding: 1.2rem;
+}
+
+
+.form-label {
+  font-weight: 600;
+  color: #2c4b2c;
+  margin-bottom: 0.3rem;
+}
+
+/* in and select cointeiner */
+.form-control, .form-select {
+  border-radius: 16px;
+  border: 1px solid #b8cfb0;
+  background: #fffef7;
+  transition: 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #86b87a;
+  box-shadow: 0 0 0 0.2rem rgba(106, 166, 76, 0.25);
+}
+
+/* wrong*/
+.error-text {
+  color: #e2574c;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  display: inline-block;
+  background: #ffe6e4;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* show the wrong */
+.global-error {
+  background: #ffb3b0;
+  color: #a1231a;
+  padding: 10px 18px;
+  border-radius: 60px;
+  font-weight: 600;
+  text-align: center;
+  margin: 1.2rem 0 1rem;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-ghibli {
+  font-family: 'Luna', 'Quicksand', sans-serif;
+  background: #5cb85c;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 10px 24px;
+  border-radius: 40px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 6px 0 #2c6e2c;
+  transition: 0.1s linear;
+}
+
+.btn-ghibli:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 #2c6e2c;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+/* card */
+.place-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  height: 210px;
+  display: flex;
+  flex-direction: column;
+}
+
+.place-card.selected {
+  border-color: #5cb85c;
+  box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.4), 0 6px 12px rgba(0,0,0,0.1);
+  transform: scale(0.98);
+}
+
+.place-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.place-info {
+  padding: 0.5rem 0.8rem 0.8rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.place-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #2c5e2a;
+  margin-bottom: 0.25rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.place-desc {
+  font-size: 0.7rem;
+  color: #5e4b32;
+  overflow-y: auto;
+  flex: 1;
+  line-height: 1.3;
+}
+
+.place-desc::-webkit-scrollbar {
+  width: 3px;
+}
+.place-desc::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.place-desc::-webkit-scrollbar-thumb {
+  background: #b8cfb0;
+  border-radius: 3px;
+}
+
+/* submit card background*/
+.summary-card {
+  background: #d9eaf7;
+  backdrop-filter: blur(8px);
+  border-radius: 28px;
+  padding: 1.2rem;
+  margin-top: 1.5rem;
+  border: 1px solid #b3e0a0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.summary-card h2 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  color: #2c6e2c;
+  border-left: 5px solid #8bc34a;
+  padding-left: 0.8rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+}
+
+.summary-section {
+  margin-bottom: 0.7rem;
+  line-height: 1.4;
+  font-size: 0.9rem;
+}
+
+.summary-title {
+  font-weight: bold;
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem;
+}
+
+/* male and not male */
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.form-check-input:checked {
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
+
+/* footer */
+footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #e7f3cf;
+  font-size: 0.75rem;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+/* response */
+@media (max-width: 768px) {
+  .main-container {
+    width: 95%;
+  }
+  h1 { font-size: 2rem; }
+  .places-grid { grid-template-columns: 1fr; }
+  .accordion-button {
+    min-height: 70px;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+  .place-card {
+    height: 190px;
+  }
+  .place-card img {
+    height: 90px;
+  }
+  .place-name {
+    font-size: 0.85rem;
+  }
+  .place-desc {
+    font-size: 0.65rem;
+  }
+}
